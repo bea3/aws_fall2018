@@ -1,3 +1,7 @@
+# Download Scraper script from S3 bucket
+
+# Download requirements.txt from S3 bucket
+
 # Install Python and dependencies
 apt-get update
 apt-get install python3.6
@@ -5,6 +9,9 @@ apt-get install software-properties-common
 add-apt-repository ppa:deadsnakes/ppa
 apt-get update
 apt-get install python3.6
+apt-get install python-pip python-dev build-essential
+pip install --upgrade pip
+pip install -r requirements.txt
 
 # Install Google Chrome
 echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >>> /etc/apt/sources.list
@@ -28,11 +35,9 @@ add-apt-repository \
 apt-get update
 apt-get install docker-ce
 
-# download Scraper script from S3 bucket
-
-
 # Set up for scraper
 docker pull fate0/headless-chrome
 docker run -it --rm --cap-add=SYS_ADMIN -p9222:9222 fate0/headless-chrome &
 
 # Run Scraper
+python scraper.py
