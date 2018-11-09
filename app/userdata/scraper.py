@@ -1,31 +1,29 @@
-# This is the script that will get executed when the EC2 is launched
 import pychrome
+import os
 
-# create a browser instance
-browser = pychrome.Browser(url="http://127.0.0.1:9222")
+if 'TARGET_URL' not in os.environ:
+    TARGET_URL = "https://soundcloud.com"
+else:
+    TARGET_URL = os.environ["TARGET_URL"]
 
-# create a tab
+browser = pychrome.Browser(url="http://0.0.0.0:9222")
 tab = browser.new_tab()
 
-# register callback if you want
 def request_will_be_sent(**kwargs):
     print("loading: %s" % kwargs.get('request').get('url'))
 
-tab.Network.requestWillBeSent = request_will_be_sent
+tab.set_listener("Network.requestWillBeSent", request_will_be_sent)
 
-# start the tab
 tab.start()
+tab.call_method("Network.enable")
+tab.call_method("Page.navigate", url=TARGET_URL, _timeout=5)
 
-# call method
-tab.Network.enable()
-# call method with timeout
-tab.Page.navigate(url="https://github.com/fate0/pychrome", _timeout=5)
-
-# wait for loading
 tab.wait(5)
 
-# stop the tab (stop handle events and stop recv message from chrome)
-tab.stop()
+tab.call_method("DOM.enable")
+result = tab.call_method("DOM.getFlattenedDocument", depth=3, pierce=True)
 
-# close tab
+# send to S3 bucket
+
+tab.stop()
 browser.close_tab(tab)
