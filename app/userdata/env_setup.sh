@@ -12,10 +12,7 @@ python -m pip install awscli --upgrade --user
 
 # Create Credentials file for AWS
 mkdir .aws
-echo "
-[default]
-aws_access_key_id = AKIAIYGBHONRPVFMU3FQ
-aws_secret_access_key = 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" >> ~/.aws/credentials
+
 
 # Download Scraper script from S3 bucket
 aws s3 cp s3://scrape-fall2018/scraper.py .
@@ -34,5 +31,4 @@ python -m pip install -U pychrome
 google-chrome --headless --disable-gpu --remote-debugging-port=9222 &
 
 # Run Scraper
-REPLACE IP ADDRESS IN SCRAPER WITH IP ADDRESS OF EC2 INSTNACE
 python scraper.py
