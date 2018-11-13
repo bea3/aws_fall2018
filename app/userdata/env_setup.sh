@@ -1,3 +1,5 @@
+export TARGET_URL="THISISTHETARGETURL"
+
 # Install Python and dependencies
 apt-get update
 apt-get install -y python3

@@ -2,22 +2,28 @@ import boto3
 import os
 
 LINUX_AMI_ID = 'ami-059eeca93cf09eebd'
-REGION_NAME = 'us-east-1'  # TODO add this as environment name
+REGION_NAME = 'us-east-1'
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 class EC2Controller:
     def __init__(self):
         self.state = None
-        self.ec2_resource = boto3.resource('ec2', region_name=REGION_NAME)
+        self.ec2_resource = None
+        self.ec2_client = None
+        self.vpc = None
+        self.subnet = None
+        self.ec2 = None
+
+    def create_instance(self, target_url=None, region_name=REGION_NAME):
+        self.ec2_resource = boto3.resource('ec2', region_name=region_name)
         self.ec2_client = boto3.client('ec2')
         self.vpc = self.get_vpc()
         self.subnet = self.get_subnet()
-        self.ec2 = None
-
-    def create_instance(self):
         with open(os.path.join(ROOT_DIR, "userdata/env_setup.sh"), 'r') as f:
             user_data = f.read()
+            if target_url is not None:
+                user_data = user_data.replace("THISISTHETARGETURL", target_url)
         self.ec2 = self.ec2_resource.create_instances(ImageId=LINUX_AMI_ID, InstanceType='t1.micro', MaxCount=1, MinCount=1, UserData=user_data, SubnetId=self.subnet.id)[0]
 
     def get_vpc(self):
