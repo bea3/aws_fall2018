@@ -2,13 +2,14 @@ import boto3
 import os
 
 LINUX_AMI_ID = 'ami-059eeca93cf09eebd'
+REGION_NAME = 'us-east-1'  # TODO add this as environment name
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 class EC2Controller:
     def __init__(self):
         self.state = None
-        self.ec2_resource = boto3.resource('ec2')
+        self.ec2_resource = boto3.resource('ec2', region_name=REGION_NAME)
         self.ec2_client = boto3.client('ec2')
         self.vpc = self.get_vpc()
         self.subnet = self.get_subnet()
@@ -23,14 +24,14 @@ class EC2Controller:
         vpcs = self.ec2_client.describe_vpcs()['Vpcs']
 
         if len(vpcs) == 0:
-            return self.ec2_resource.create_vpc(CidrBlock='10.0.0.0/16', AmazonProvidedIpv6CidrBlock=True, DryRun=False, InstanceTenancy='default')
+            return self.ec2_resource.create_vpc(CidrBlock='172.31.0.0/16', AmazonProvidedIpv6CidrBlock=True, DryRun=False, InstanceTenancy='default')
 
         vpc_id = vpcs[0]['VpcId']
         return self.ec2_resource.Vpc(vpc_id)
 
     def get_subnet(self):
         if len(list(self.vpc.subnets.all())) == 0:
-            return self.vpc.create_subnet(CidrBlock='10.0.0.0/24', DryRun=False)
+            return self.vpc.create_subnet(CidrBlock='172.31.80.0/20', DryRun=False)
         else:
             return list(self.vpc.subnets.all())[0]
 

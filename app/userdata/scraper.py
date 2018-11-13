@@ -8,7 +8,7 @@ if 'TARGET_URL' not in os.environ:
 else:
     TARGET_URL = os.environ["TARGET_URL"]
 
-browser = pychrome.Browser(url="http://0.0.0.0:9222")
+browser = pychrome.Browser(url="http://127.0.0.1:9222")
 tab = browser.new_tab()
 
 def request_will_be_sent(**kwargs):
