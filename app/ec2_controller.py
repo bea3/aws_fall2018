@@ -1,8 +1,7 @@
 import boto3
 import os
+import yaml
 
-LINUX_AMI_ID = 'ami-059eeca93cf09eebd'
-REGION_NAME = 'us-east-1'
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -15,7 +14,16 @@ class EC2Controller:
         self.subnet = None
         self.ec2 = None
 
-    def create_instance(self, target_url=None, region_name=REGION_NAME):
+        with open("config.yml", 'r') as f:
+            try:
+                self.config = yaml.load(f)
+            except yaml.YAMLError:
+                pass
+
+    def create_instance(self, target_url=None, region_name=None):
+        if region_name is None:
+            region_name = self.config['REGION_NAME']
+
         self.ec2_resource = boto3.resource('ec2', region_name=region_name)
         self.ec2_client = boto3.client('ec2')
         self.vpc = self.get_vpc()
@@ -24,15 +32,20 @@ class EC2Controller:
             user_data = f.read()
             if target_url is not None:
                 user_data = user_data.replace("THISISTHETARGETURL", target_url)
-        self.ec2 = self.ec2_resource.create_instances(ImageId=LINUX_AMI_ID, InstanceType='t1.micro', MaxCount=1, MinCount=1, UserData=user_data, SubnetId=self.subnet.id)[0]
+        self.ec2 = self.ec2_resource.create_instances(ImageId=self.config['LINUX_AMI_ID'], InstanceType='t1.micro', MaxCount=1, MinCount=1, UserData=user_data, SubnetId=self.subnet.id, KeyName=self.config['KEY_NAME'])[0]
 
     def get_vpc(self):
         vpcs = self.ec2_client.describe_vpcs()['Vpcs']
+        vpc_id = None
 
-        if len(vpcs) == 0:
+        for vpc in vpcs:
+            if vpc['IsDefault']:
+                vpc_id = vpc['VpcId']
+                break
+
+        if len(vpcs) == 0 or vpc_id is None:
             return self.ec2_resource.create_vpc(CidrBlock='172.31.0.0/16', AmazonProvidedIpv6CidrBlock=True, DryRun=False, InstanceTenancy='default')
 
-        vpc_id = vpcs[0]['VpcId']
         return self.ec2_resource.Vpc(vpc_id)
 
     def get_subnet(self):
