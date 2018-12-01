@@ -1,3 +1,7 @@
+# Pre-Requisites
+* Python3.4 or newer
+* AWS Credentials
+
 ### Set Up ###
 You need to create a credential file. The default location is `~/.aws/credentials` for Unix/Linux.
 Replace the AWS Key and AWS Secret Key in app/userdata/env_setup.sh

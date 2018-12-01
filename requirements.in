@@ -1,0 +1,12 @@
+boto3
+flask
+pychrome
+beautifulsoup4
+Cython
+html5lib
+requests
+gunicorn
+ujson
+statsd
+pyyaml
+
