@@ -2,6 +2,7 @@
 *.iml
 bgarcia.pem
 rootkey.csv
+config.yml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
