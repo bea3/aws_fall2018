@@ -2,10 +2,12 @@ import pychrome
 import os
 import json
 
-if 'TARGET_URL' not in os.environ:
+if 'TARGET_URL' not in os.environ or os.environ["TARGET_URL"] == "THISISTHETARGETURL":
     TARGET_URL = "https://slickdeals.net"
 else:
     TARGET_URL = os.environ["TARGET_URL"]
+
+print(TARGET_URL)
 
 browser = pychrome.Browser(url="http://127.0.0.1:9222")
 tab = browser.new_tab()
