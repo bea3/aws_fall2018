@@ -27,6 +27,7 @@ google-chrome --headless --no-sandbox --disable-gpu --remote-debugging-port=9222
 echo "**** Running scraper"
 sleep 5
 touch /tmp/scraper/website.json
+chmod 777 /tmp/scraper/website.json
 python /tmp/scraper/scraper.py
 echo "**** Sending scraped elements in the bucket"
 DATE=`date '+%Y-%m-%d-%H:%M:%S'`
