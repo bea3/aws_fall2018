@@ -10,8 +10,11 @@ During the course of this project, I used several types of AWS technologies incl
 * AWS cli commands
 * EC2 Instance's user data
 
-### Set Up ###
-1. Create a credential file. The default location is `~/.aws/credentials` for Unix/Linux.
+### Pre-Requisites ###
+* Python3.4 or newer
+* AWS Credentials
+
+. Create a credential file. The default location is `~/.aws/credentials` for Unix/Linux.
 2. Create an AWS Key and AWS Secret Key
 3. Create a keypair that would be used for the EC2 instances.
 4. Replace the AWS Key, AWS Secret Key, and Key Pair name in configuration.yml with your information.
