@@ -13,7 +13,7 @@ class EC2Controller:
         self.subnet = None
         self.ec2 = None
 
-        with open("config.yml", 'r') as f:
+        with open("configuration.yml", 'r') as f:
             try:
                 self.config = yaml.load(f)
             except yaml.YAMLError:
