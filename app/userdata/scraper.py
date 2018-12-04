@@ -8,7 +8,6 @@ if target_url is None or target_url == "THISISTHETARGETURL":
     target_url = "https://slickdeals.net"
 
 print("TARGET URL")
-print(os.environ.get('TARGET_URL'))
 print(target_url)
 
 browser = pychrome.Browser(url="http://127.0.0.1:9222")
